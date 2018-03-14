@@ -8,10 +8,9 @@ using System.Runtime.InteropServices;
 namespace UMemory.Models
 {
 	/// <summary>
-	/// Implement Unmanaged memory area.
+	/// Implement Unmanaged memory. This class is sealed class.
 	/// </summary>
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	public class Memory : IDisposable, ICloneable
+	public sealed class Memory : IDisposable, ICloneable, IComparable<Memory>
 	{
 		private Memory() { }
 
@@ -46,10 +45,10 @@ namespace UMemory.Models
 		/// </summary>
 		/// <param name="dstType">Casting type.</param>
 		/// <returns>Castingable object.</returns>
-		public object Cast(Type dstType)
+		public CastType Cast<CastType>()
 		{
-			if (Marshal.SizeOf(dstType) != Size)
-				return Marshal.PtrToStructure(Address, dstType);
+			if (Marshal.SizeOf(typeof(CastType)) != Size)
+				return Marshal.PtrToStructure<CastType>(Address);
 			else
 				throw new InvalidCastException("Memory Size mismatched!");
 		}
@@ -57,19 +56,18 @@ namespace UMemory.Models
 		/// <summary>
 		/// Cast allocated memory area.
 		/// </summary>
-		/// <param name="dstType">Casting type.</param>
 		/// <param name="ignoreOversize">If true, ignore oversize.</param>
 		/// <returns></returns>
-		public object Cast(Type dstType, bool ignoreOversize)
+		public CastType Cast<CastType>(bool ignoreOversize)
 		{
 			try
 			{
-				return Cast(dstType);
+				return Cast<CastType>();
 			}
 			catch (InvalidCastException)
 			{
-				if (Marshal.SizeOf(dstType) <= Size && ignoreOversize)
-					return Marshal.PtrToStructure(Address, dstType);
+				if (Marshal.SizeOf(typeof(CastType)) <= Size && ignoreOversize)
+					return Marshal.PtrToStructure<CastType>(Address);
 				else
 					throw;
 			}
@@ -83,6 +81,15 @@ namespace UMemory.Models
 		public override bool Equals(object obj)
 		{
 			return GCHandle.ToIntPtr(GCHandle.Alloc(obj, GCHandleType.Normal)) == Address;
+		}
+
+		/// <summary>
+		/// Return object memory area.
+		/// </summary>
+		/// <returns></returns>
+		public byte[] GetBytes()
+		{
+			return Marshal.PtrToStructure<byte[]>(Address);
 		}
 
 		public override int GetHashCode()
@@ -101,12 +108,25 @@ namespace UMemory.Models
 		/// <returns>New allocated memory object.</returns>
 		public object Clone()
 		{
-			return Allocation(this.Size);
+			Memory memory = Allocation(this.Size);
+			UMemory.Memcpy(this, memory, this.Size);
+
+			return memory;
 		}
 
 		public void Dispose()
 		{
 			Marshal.FreeHGlobal(Address);
+		}
+
+		public int CompareTo(Memory other)
+		{
+			if (Equals(other))
+				return 0;
+			else if (Address.ToInt32() > other.Address.ToInt32())
+				return 1;
+			else
+				return -1;
 		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UMemory.Models;
+using System.Runtime.InteropServices;
 
 namespace UMemory
 {
@@ -21,7 +22,12 @@ namespace UMemory
 
 		public static void Memcpy(Memory src, Memory dst, int length)
 		{
-			Array.Copy(src.Bytes, dst.Bytes, length);
+			Marshal.Copy(Marshal.PtrToStructure<byte[]>(src.Address), 0, src.Address, length);
+		}
+
+		public static void Memset(Memory dst, bool value, int offset, int length)
+		{
+			
 		}
 	}
 }
