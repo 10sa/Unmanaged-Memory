@@ -6,6 +6,7 @@ namespace UMemory.Models
 	/// <summary>
 	/// Implement Unmanaged memory. This class is sealed class.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential, Pack =1)]
 	public sealed class Memory : IDisposable, ICloneable, IComparable<Memory>
 	{
 		private Memory() { }
@@ -13,103 +14,35 @@ namespace UMemory.Models
 		/// <summary>
 		/// Return allocated memory size.
 		/// </summary>
-		public int Size { get; private set; }
+		public int Size { get { return _size; } private set { _size = value; } }
+		private int _size = 0;
 
 		/// <summary>
 		/// Return allocated memory area address. This address isn't Memory instance address.
 		/// </summary>
-		public IntPtr Address { get; private set; }
-
-		/// <summary>
-		/// Whether this memory instance is allocated.If this is true, then this instance is a garbage collector instance. Also, if this value is true, memory area that has been Allocated at the time of disposal is also free.
-		/// </summary>
-		public bool IsAllocated { get; private set; }
+		public IntPtr Address { get { return _address; } private set { _address = value; } }
+		private IntPtr _address = IntPtr.Zero;
 
 		/// <summary>
 		/// Whether or not to free the unmanaged memory area that the object points to when the Memory object is free.
 		/// </summary>
-		public bool IsFreeOnDispose { get; set; } = false;
-
-		/// <summary>
-		/// Return this object address. This address isn't request result memory area.
-		/// </summary>
-		public IntPtr ObjectAddress
-		{
-			get
-			{
-				if (ObjectAddress == null)
-					ObjectAddress = GCHandle.ToIntPtr(GCHandle.Alloc(this));
-				
-				return ObjectAddress;
-			}
-
-			private set
-			{
-				ObjectAddress = value;
-			}
-		}
+		public bool IsFreeOnDispose { get { return _isFreeOnDispose; } set { _isFreeOnDispose = value; } }
+		private bool _isFreeOnDispose = false;
 
 		internal static Memory Allocation(int size)
 		{
-			Memory memory;
-			IntPtr memoryObject = Marshal.AllocHGlobal(size + Marshal.SizeOf(typeof(Memory)));
-			memory = (Memory)Marshal.PtrToStructure(memoryObject, typeof(Memory));
+			IntPtr memoryObject = Marshal.AllocHGlobal(size);
+			Memory memory = (Memory)Marshal.PtrToStructure(memoryObject, typeof(Memory));
 			memory.Address = IntPtr.Add(memoryObject, Marshal.SizeOf(typeof(Memory)));
-			memory.ObjectAddress = memoryObject;
 			memory.Size = size;
-			memory.IsAllocated = true;
+			memory.IsFreeOnDispose = false;
 
 			return memory;
-		}
-
-		internal static Memory Allocation(int size, bool collectable)
-		{
-			if (collectable)
-			{
-				IntPtr memoryObject = Marshal.AllocHGlobal(size);
-				return new Memory(size, memoryObject);
-			}
-			else
-				return Allocation(size);
 		}
 
 		private Memory(int size, IntPtr memoryAddress)
 		{
 			this.Address = memoryAddress;
-			this.IsAllocated = false;
-		}
-
-		/// <summary>
-		/// Cast allocated memory area.
-		/// </summary>
-		/// <param name="dstType">Casting type.</param>
-		/// <returns>Castingable object.</returns>
-		public CastType Cast<CastType>()
-		{
-			if (Marshal.SizeOf(typeof(CastType)) != Size)
-				return Marshal.PtrToStructure<CastType>(Address);
-			else
-				throw new InvalidCastException("Memory Size mismatched!");
-		}
-
-		/// <summary>
-		/// Cast allocated memory area.
-		/// </summary>
-		/// <param name="ignoreOversize">If true, ignore oversize.</param>
-		/// <returns></returns>
-		public CastType Cast<CastType>(bool ignoreOversize)
-		{
-			try
-			{
-				return Cast<CastType>();
-			}
-			catch (InvalidCastException)
-			{
-				if (Marshal.SizeOf(typeof(CastType)) <= Size && ignoreOversize)
-					return Marshal.PtrToStructure<CastType>(Address);
-				else
-					throw;
-			}
 		}
 
 		/// <summary>
@@ -140,12 +73,18 @@ namespace UMemory.Models
 		{
 			get
 			{
-				return Marshal.PtrToStructure<byte[]>(Address)[offset];
+				if (offset >= Size)
+					throw new FieldAccessException();
+				else
+					return Marshal.ReadByte(Address, offset);
 			}
 
 			set
 			{
-				Marshal.PtrToStructure<byte[]>(Address)[offset] = value;
+				if (value >= Size)
+					throw new FieldAccessException();
+				else
+					Marshal.WriteByte(Address, offset, value);
 			}
 		}
 
@@ -177,10 +116,8 @@ namespace UMemory.Models
 
 		public void Dispose()
 		{
-			if (!IsAllocated && IsFreeOnDispose)
-				Marshal.FreeHGlobal(Address);
-			else if (IsAllocated)
-				Marshal.FreeHGlobal(ObjectAddress);
+			Marshal.FreeHGlobal(Address);
+			Console.WriteLine("TEST!");
 		}
 
 		public int CompareTo(Memory other)

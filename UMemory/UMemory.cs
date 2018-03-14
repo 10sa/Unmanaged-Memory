@@ -15,17 +15,6 @@ namespace UMemory
 			return Memory.Allocation(size);
 		}
 
-		/// <summary>
-		/// Allocate unmanaged memory areas.
-		/// </summary>
-		/// <param name="size">Size of memory area.</param>
-		/// <param name="collectable">Whether the Memory object itself is garbage collectable.Even though this value is true, the memory area pointed to by the Memory instance is unmanaged memory.</param>
-		/// <returns></returns>
-		public static Memory Allocation(int size, bool collectable)
-		{
-			return Memory.Allocation(size, collectable);
-		}
-
 		public static void Memcpy(Memory src, Memory dst, int length)
 		{
 			Marshal.Copy(Marshal.PtrToStructure<byte[]>(src.Address), 0, src.Address, length);
