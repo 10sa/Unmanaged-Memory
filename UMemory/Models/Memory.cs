@@ -92,6 +92,24 @@ namespace UMemory.Models
 			return Marshal.PtrToStructure<byte[]>(Address);
 		}
 
+		/// <summary>
+		/// Access allocated memory area.
+		/// </summary>
+		/// <param name="offset">Memory offset.</param>
+		/// <returns>Allocated memory area value.</returns>
+		public byte this[int offset]
+		{
+			get
+			{
+				return Marshal.PtrToStructure<byte[]>(Address)[offset];
+			}
+
+			set
+			{
+				Marshal.PtrToStructure<byte[]>(Address)[offset] = value;
+			}
+		}
+
 		public override int GetHashCode()
 		{
 			return Address.ToInt32();
@@ -117,6 +135,7 @@ namespace UMemory.Models
 		public void Dispose()
 		{
 			Marshal.FreeHGlobal(Address);
+			
 		}
 
 		public int CompareTo(Memory other)
