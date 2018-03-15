@@ -6,13 +6,6 @@ namespace UMemory
     internal static class MemAPIs
 	{
 		#region WinAPI extern
-		/// <summary>
-		/// Retrieves a handle to the default heap of the calling process. This handle can then be used in subsequent calls to the heap methods.
-		/// </summary>
-		/// <returns>If the function succeeds, the return value is a handle to the calling process's heap.</returns>
-		/// <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569(v=vs.85).aspx</remarks>
-		[DllImport("Kernel32.dll", EntryPoint = "GetProcessHeap")]
-		internal extern static IntPtr GetProcessHeap();
 
 		/// <summary>
 		/// Allocates a block of memory from a heap. The allocated memory is not movable.
@@ -37,17 +30,6 @@ namespace UMemory
 		internal extern static IntPtr HeapFree(IntPtr hHeap, HeapFlags dwFlags, IntPtr lpMem);
 
 		/// <summary>
-		/// Copies a block of memory from one location to another.
-		/// </summary>
-		/// <param name="dst">A pointer to the starting address of the copied block's destination.</param>
-		/// <param name="src">A pointer to the starting address of the block of memory to copy.</param>
-		/// <param name="size">The size of the block of memory to copy, in bytes.</param>
-		/// <returns>This function has no return value.</returns>
-		/// <remarks>https://msdn.microsoft.com/ko-kr/library/windows/desktop/aa366535(v=vs.85).aspx</remarks>
-		[DllImport("Kernel32.dll", EntryPoint ="CopyMemory")]
-		internal extern static IntPtr CopyMemory(IntPtr lpDestination, IntPtr lpSource, uint dwLength);
-
-		/// <summary>
 		/// Creates a private heap object that can be used by the calling process. The function reserves space in the virtual address space of the process and allocates physical storage for a specified initial portion of this block.
 		/// </summary>
 		/// <param name="flOptions">The heap allocation options. These options affect subsequent access to the new heap through calls to the heap functions. This parameter can be 0 or one or more of the following values.</param>
@@ -59,6 +41,25 @@ namespace UMemory
 		internal extern static IntPtr CreateHeap(HeapFlags flOptions, uint dwInitialSize, uint dwMaximumSize);
 
 		/// <summary>
+		/// Destroys the specified heap object. It decommits and releases all the pages of a private heap object, and it invalidates the handle to the heap.
+		/// </summary>
+		/// <param name="hHeap">A handle to the heap to be destroyed. This handle is returned by the HeapCreate function. Do not use the handle to the process heap returned by the GetProcessHeap method.</param>
+		/// <returns>If the function succeeds, the return value is true.</returns>
+		[DllImport("Kernel32.dll", EntryPoint = "HeapDestory")]
+		internal extern static bool HeapDestory(IntPtr hHeap);
+
+		/// <summary>
+		/// Copies a block of memory from one location to another.
+		/// </summary>
+		/// <param name="dst">A pointer to the starting address of the copied block's destination.</param>
+		/// <param name="src">A pointer to the starting address of the block of memory to copy.</param>
+		/// <param name="size">The size of the block of memory to copy, in bytes.</param>
+		/// <returns>This function has no return value.</returns>
+		/// <remarks>https://msdn.microsoft.com/ko-kr/library/windows/desktop/aa366535(v=vs.85).aspx</remarks>
+		[DllImport("Kernel32.dll", EntryPoint = "CopyMemory")]
+		internal extern static IntPtr CopyMemory(IntPtr lpDestination, IntPtr lpSource, uint dwLength);
+
+		/// <summary>
 		/// Returns the number of active heaps and retrieves handles to all of the active heaps for the calling process.
 		/// </summary>
 		/// <param name="dwNumberOfHeaps">The maximum number of heap handles that can be stored into the buffer pointed to by ProcessHeaps.</param>
@@ -66,7 +67,15 @@ namespace UMemory
 		/// <returns>The return value is the number of handles to heaps that are active for the calling process.</returns>
 		/// <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa366571(v=vs.85).aspx</remarks>
 		[DllImport("Kernel32.dll", EntryPoint ="GetProcessHeaps")]
-		internal extern static uint GetProcessHeaps(uint dwNumberOfHeaps, IntPtr[] pProcessHeaps);  
+		internal extern static uint GetProcessHeaps(uint dwNumberOfHeaps, IntPtr[] pProcessHeaps);
+
+		/// <summary>
+		/// Retrieves a handle to the default heap of the calling process. This handle can then be used in subsequent calls to the heap methods.
+		/// </summary>
+		/// <returns>If the function succeeds, the return value is a handle to the calling process's heap.</returns>
+		/// <remarks>https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569(v=vs.85).aspx</remarks>
+		[DllImport("Kernel32.dll", EntryPoint = "GetProcessHeap")]
+		internal extern static IntPtr GetProcessHeap();
 		#endregion
 	}
 }

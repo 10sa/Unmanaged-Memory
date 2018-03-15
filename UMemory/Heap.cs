@@ -13,6 +13,15 @@ namespace UMemory
 		/// </summary>
 		public IntPtr Handle { get; private set; }
 
+		/// <summary>
+		/// Destroys the this heap object. It decommits and releases all the pages of a private heap object, and it invalidates the handle to the heap.
+		/// </summary>
+		public void Destory()
+		{
+			MemAPIs.HeapDestory(Handle);
+			Handle = IntPtr.Zero;
+		}
+
 		public static implicit operator Heap(IntPtr handle) => new Heap(handle);
 
 		public static implicit operator IntPtr(Heap heap) => heap.Handle;
