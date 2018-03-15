@@ -3,22 +3,29 @@ using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 
+using UMemory.Enums;
+
 namespace UMemory.Models
 {
 	/// <summary>
 	/// Implement Unmanaged memory. This class is sealed class.
 	/// </summary>
-	public sealed class Memory : IDisposable, ICloneable, IComparable<Memory>, IEnumerable
+	public sealed class Memory : IDisposable, ICloneable, IEnumerable
 	{
 		/// <summary>
 		/// Allocated memory size.
 		/// </summary>
-		public int Size { get; private set; }
+		public uint Size { get; private set; }
 
 		/// <summary>
 		/// Allocated memory area address. This address isn't Memory instance address.
 		/// </summary>
 		public IntPtr Address { get; private set; }
+
+		/// <summary>
+		/// A handle to the heap from which the memory allocated.
+		/// </summary>
+		public Heap HeapHandle { get; private set; }
 
 		/// <summary>
 		/// Whether or not to free the unmanaged memory area that the object points to when the Memory object is free.
@@ -27,15 +34,32 @@ namespace UMemory.Models
 
 		private Memory() { }
 
-		internal static Memory Allocation(int size)
+		/// <summary>
+		/// Allocates a block of memory from a heap. The allocated memory is not movable.
+		/// </summary>
+		/// <param name="size">The number of bytes to be allocated.</param>
+		/// <param name="heapHandle">A handle to the heap from which the memory will be allocated.</param>
+		/// <returns>If the function succeeds, Memory.Address member not null.</returns>
+		public static Memory Allocation(uint size, Heap heapHandle)
 		{
-			IntPtr memoryObject = Marshal.AllocHGlobal(size);
+			IntPtr memoryObject = MemAPIs.HeapAlloc(MemAPIs.GetProcessHeap(), HeapFlags.HEAP_NONE, size);
 			Memory memory = new Memory();
 			memory.Address = memoryObject;
 			memory.Size = size;
+			memory.HeapHandle = heapHandle;
 			memory.IsFreeOnDispose = false;
 
 			return memory;
+		}
+
+		/// <summary>
+		/// Allocates memory for the Heap Handle returned by the GetProcessHeap() method. The allocated memory is not movable.
+		/// </summary>
+		/// <param name="size">The number of bytes to be allocated.</param>
+		/// <returns>If the function succeeds, Memory.Address member not null.</returns>
+		public static Memory Allocation(uint size)
+		{
+			return Allocation(size, MemAPIs.GetProcessHeap());
 		}
 
 		/// <summary>
@@ -87,15 +111,15 @@ namespace UMemory.Models
 		/// <returns>New allocated memory object.</returns>
 		public object Clone()
 		{
-			Memory memory = Allocation(this.Size);
-			UMemory.Memcpy(this, memory, this.Size);
+			Memory memory = Allocation(Size);
+			MemAPIs.CopyMemory(Address, memory.Address, Size);
 
 			return memory;
 		}
 
 		public void Dispose()
 		{
-			if (this.IsFreeOnDispose)
+			if (IsFreeOnDispose)
 				Free();
 		}
 
@@ -104,17 +128,7 @@ namespace UMemory.Models
 		/// </summary>
 		public void Free()
 		{
-			Marshal.FreeHGlobal(Address);
-		}
-
-		public int CompareTo(Memory other)
-		{
-			if (Equals(other))
-				return 0;
-			else if (Address.ToInt32() > other.Address.ToInt32())
-				return 1;
-			else
-				return -1;
+			MemAPIs.HeapFree(HeapHandle, HeapFlags.HEAP_NONE, Address);
 		}
 
 		/// <summary>
@@ -146,10 +160,10 @@ namespace UMemory.Models
 
 			private int offset;
 			private IntPtr ptr;
-			private int size;
+			private uint size;
 
 			private MemoryByte() { }
-			public MemoryByte(IntPtr address, int size)
+			public MemoryByte(IntPtr address, uint size)
 			{
 				this.offset = -1;
 				this.size = size;
