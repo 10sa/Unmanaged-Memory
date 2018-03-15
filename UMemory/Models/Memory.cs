@@ -1,58 +1,41 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UMemory.Models
 {
 	/// <summary>
 	/// Implement Unmanaged memory. This class is sealed class.
 	/// </summary>
-	[StructLayout(LayoutKind.Sequential, Pack =1)]
-	public sealed class Memory : IDisposable, ICloneable, IComparable<Memory>
+	public sealed class Memory : IDisposable, ICloneable, IComparable<Memory>, IEnumerable
 	{
-		private Memory() { }
+		/// <summary>
+		/// Allocated memory size.
+		/// </summary>
+		public int Size { get; private set; }
 
 		/// <summary>
-		/// Return allocated memory size.
+		/// Allocated memory area address. This address isn't Memory instance address.
 		/// </summary>
-		public int Size { get { return _size; } private set { _size = value; } }
-		private int _size = 0;
-
-		/// <summary>
-		/// Return allocated memory area address. This address isn't Memory instance address.
-		/// </summary>
-		public IntPtr Address { get { return _address; } private set { _address = value; } }
-		private IntPtr _address = IntPtr.Zero;
+		public IntPtr Address { get; private set; }
 
 		/// <summary>
 		/// Whether or not to free the unmanaged memory area that the object points to when the Memory object is free.
 		/// </summary>
-		public bool IsFreeOnDispose { get { return _isFreeOnDispose; } set { _isFreeOnDispose = value; } }
-		private bool _isFreeOnDispose = false;
+		public bool IsFreeOnDispose { get; set; }
+
+		private Memory() { }
 
 		internal static Memory Allocation(int size)
 		{
 			IntPtr memoryObject = Marshal.AllocHGlobal(size);
-			Memory memory = (Memory)Marshal.PtrToStructure(memoryObject, typeof(Memory));
-			memory.Address = IntPtr.Add(memoryObject, Marshal.SizeOf(typeof(Memory)));
+			Memory memory = new Memory();
+			memory.Address = memoryObject;
 			memory.Size = size;
 			memory.IsFreeOnDispose = false;
 
 			return memory;
-		}
-
-		private Memory(int size, IntPtr memoryAddress)
-		{
-			this.Address = memoryAddress;
-		}
-
-		/// <summary>
-		/// If target object address equal, true. otherwise false.
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <returns></returns>
-		public override bool Equals(object obj)
-		{
-			return GCHandle.ToIntPtr(GCHandle.Alloc(obj, GCHandleType.Normal)) == Address;
 		}
 
 		/// <summary>
@@ -61,7 +44,11 @@ namespace UMemory.Models
 		/// <returns></returns>
 		public byte[] GetBytes()
 		{
-			return Marshal.PtrToStructure<byte[]>(Address);
+			byte[] memoryArea = new byte[Size];
+			for (int i = 0; i < this.Size; i++)
+				memoryArea[i] = this[i];
+
+			return memoryArea;
 		}
 
 		/// <summary>
@@ -88,19 +75,11 @@ namespace UMemory.Models
 			}
 		}
 
-		public override int GetHashCode()
-		{
-			return Address.ToInt32();
-		}
-
 		/// <summary>
 		/// Returns This memory instance pointed memory area address.
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()
-		{
-			return Address.ToString();
-		}
+		public override string ToString() => Address.ToString();
 
 		/// <summary>
 		/// Clone this memory object. this method will be allocate new memory area.
@@ -116,8 +95,16 @@ namespace UMemory.Models
 
 		public void Dispose()
 		{
+			if (this.IsFreeOnDispose)
+				Free();
+		}
+
+		/// <summary>
+		/// Release pointed heap memory.
+		/// </summary>
+		public void Free()
+		{
 			Marshal.FreeHGlobal(Address);
-			Console.WriteLine("TEST!");
 		}
 
 		public int CompareTo(Memory other)
@@ -128,6 +115,59 @@ namespace UMemory.Models
 				return 1;
 			else
 				return -1;
+		}
+
+		/// <summary>
+		/// Returns Enumerator.
+		/// </summary>
+		/// <returns>Memory area enumerator.</returns>
+		public IEnumerator GetEnumerator() => new MemoryByte(Address, Size);
+
+		public override int GetHashCode()
+		{
+			var hashCode = 1195157887;
+			hashCode = hashCode * -1521134295 + Size.GetHashCode();
+			hashCode = hashCode * -1521134295 + EqualityComparer<IntPtr>.Default.GetHashCode(Address);
+			hashCode = hashCode * -1521134295 + IsFreeOnDispose.GetHashCode();
+			return hashCode;
+		}
+
+		private class MemoryByte : IEnumerator
+		{
+			object IEnumerator.Current => GetCurrent();
+
+			public byte GetCurrent()
+			{
+				if (offset < this.size)
+					return Marshal.ReadByte(ptr, offset);
+				else
+					throw new FieldAccessException();
+			}
+
+			private int offset;
+			private IntPtr ptr;
+			private int size;
+
+			private MemoryByte() { }
+			public MemoryByte(IntPtr address, int size)
+			{
+				this.offset = -1;
+				this.size = size;
+				this.ptr = address;
+			}
+
+			public bool MoveNext()
+			{
+				if (offset < size - 1)
+				{
+					offset++;
+					return true;
+				}
+				else
+					return false;
+			}
+
+			public void Reset() => this.offset = 0;
 		}
 	}
 }
