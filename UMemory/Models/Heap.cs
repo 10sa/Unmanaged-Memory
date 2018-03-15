@@ -9,15 +9,18 @@ namespace UMemory.Models
 {
 	public sealed class Heap
 	{
-		public static implicit operator Heap(IntPtr handle)
-		{
-			return handle;
-		}
+		private Heap() { }
 
-		public static implicit operator IntPtr(Heap heap)
-		{
-			return heap;
-		}
+		private Heap(IntPtr handle) => Handle = handle;
+
+		/// <summary>
+		/// Heap handle.
+		/// </summary>
+		public IntPtr Handle { get; private set; }
+
+		public static implicit operator Heap(IntPtr handle) => new Heap(handle);
+
+		public static implicit operator IntPtr(Heap heap) => heap.Handle;
 
 		/// <summary>
 		/// Creates a private heap object that can be used by the calling process. The function reserves space in the virtual address space of the process and allocates physical storage for a specified initial portion of this block.

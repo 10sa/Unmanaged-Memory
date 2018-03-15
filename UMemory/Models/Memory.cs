@@ -57,10 +57,7 @@ namespace UMemory.Models
 		/// </summary>
 		/// <param name="size">The number of bytes to be allocated.</param>
 		/// <returns>If the function succeeds, Memory.Address member not null.</returns>
-		public static Memory Allocation(uint size)
-		{
-			return Allocation(size, MemAPIs.GetProcessHeap());
-		}
+		public static Memory Allocation(uint size) => Allocation(size, MemAPIs.GetProcessHeap());
 
 		/// <summary>
 		/// Return object memory area.
@@ -129,6 +126,7 @@ namespace UMemory.Models
 		public void Free()
 		{
 			MemAPIs.HeapFree(HeapHandle, HeapFlags.HEAP_NONE, Address);
+			this.Address = IntPtr.Zero;
 		}
 
 		/// <summary>
