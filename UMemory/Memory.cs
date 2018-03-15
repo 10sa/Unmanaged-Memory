@@ -95,6 +95,37 @@ namespace UMemory
 		}
 
 		/// <summary>
+		/// Writes the Byte values to the memory address. Throws an ArgumentOutOfRange exception if the size field is smaller than the size of the byte values ​​to write to the address.
+		/// </summary>
+		/// <param name="bytes">A bytes to write to the memory address.</param>
+		/// <param name="offset">The offset of the memory address.</param>
+		/// <param name="length">The length of the byte to write to the memory address.</param>
+		public void WriteBytes(byte[] bytes, int offset, int length)
+		{
+			if (bytes.Length + offset <= Size)
+			{
+				for (int i = offset; i < bytes.Length; i++)
+					this[i] = bytes[i];
+			}
+			else
+				throw new ArgumentOutOfRangeException();
+		}
+
+		/// <summary>
+		/// Writes the Byte values to the memory address. Throws an ArgumentOutOfRange exception if the size field is smaller than the size of the byte values ​​to write to the address.
+		/// </summary>
+		/// <param name="bytes">A bytes to write to the memory address.</param>
+		/// <param name="length">The length of the byte to write to the memory address.</param>
+		/// <exception cref="ArgumentOutOfRangeException"></exception>
+		public void WriteBytes(byte[] bytes, int length) => WriteBytes(bytes, 0, length);
+
+		/// <summary>
+		/// Writes the Byte values to the memory address.Throws an ArgumentOutOfRange exception if the size field is smaller than the size of the byte values ​​to write to the address.
+		/// </summary>
+		/// <param name="bytes">A bytes to write to the memory address.</param>
+		public void WriteBytes(byte[] bytes) => WriteBytes(bytes, 0, bytes.Length);
+
+		/// <summary>
 		/// Returns This memory instance pointed memory area address.
 		/// </summary>
 		/// <returns></returns>
