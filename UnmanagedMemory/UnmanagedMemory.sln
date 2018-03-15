@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UMemoryTests", "..\UMemoryTests\UMemoryTests.csproj", "{86B35EF0-B609-4C57-BF9B-1D534BE349B4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnmanagedMemory", "UnmanagedMemory.csproj", "{700687E0-5A4D-40B0-BEE4-633381F662C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnmanagedMemoryTests", "..\UnmanagedMemoryTests\UnmanagedMemoryTests.csproj", "{1260BA84-3013-4B3E-94B3-B82237162070}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{86B35EF0-B609-4C57-BF9B-1D534BE349B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86B35EF0-B609-4C57-BF9B-1D534BE349B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86B35EF0-B609-4C57-BF9B-1D534BE349B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86B35EF0-B609-4C57-BF9B-1D534BE349B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{700687E0-5A4D-40B0-BEE4-633381F662C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{700687E0-5A4D-40B0-BEE4-633381F662C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{700687E0-5A4D-40B0-BEE4-633381F662C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{700687E0-5A4D-40B0-BEE4-633381F662C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1260BA84-3013-4B3E-94B3-B82237162070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1260BA84-3013-4B3E-94B3-B82237162070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1260BA84-3013-4B3E-94B3-B82237162070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1260BA84-3013-4B3E-94B3-B82237162070}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
