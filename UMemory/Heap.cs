@@ -1,11 +1,6 @@
 ﻿using System;
-using UMemory.Enums;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UMemory.Models
+namespace UMemory
 {
 	public sealed class Heap
 	{

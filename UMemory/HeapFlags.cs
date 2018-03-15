@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UMemory.Enums
+namespace UMemory
 {
 	[Flags]
 	public enum HeapFlags : uint

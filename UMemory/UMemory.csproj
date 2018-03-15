@@ -41,9 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\HeapFlags.cs" />
-    <Compile Include="Models\Heap.cs" />
-    <Compile Include="Models\Memory.cs" />
+    <Compile Include="HeapFlags.cs" />
+    <Compile Include="Heap.cs" />
+    <Compile Include="Memory.cs" />
     <Compile Include="UMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
