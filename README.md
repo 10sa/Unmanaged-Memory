@@ -31,6 +31,11 @@ memory.Free();
 ```
 
 ```
+/// Since VS2017, C++ Version Memory release
+delete memory; // memory : Address (in C#, IntPtr type variable.)
+```
+
+```
 /// Dispose Free
 using (Memory memory = Memory.Allocation(4))
 {
