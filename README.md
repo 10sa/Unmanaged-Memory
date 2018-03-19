@@ -65,7 +65,7 @@ memoryHeap.Destory();
   - Symbol : GetProcessHeap
   - MSDN Link : https://msdn.microsoft.com/en-us/library/windows/desktop/aa366569(v=vs.85).aspx
   
-   ## IntPtr GetProcessHeaps(uint, IntPtr[])
+   ## uint GetProcessHeaps(uint, IntPtr[])
   - Dll : Kernel32.dll
   - Symbol : GetProcessHeaps
 	- MSDN Link : https://msdn.microsoft.com/en-us/library/windows/desktop/aa366571(v=vs.85).aspx
