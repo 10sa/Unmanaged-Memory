@@ -41,13 +41,18 @@ namespace UnmanagedMemory
 		public static Memory Allocation(uint size, Heap heapHandle)
 		{
 			IntPtr memoryObject = MemAPIs.HeapAlloc(heapHandle, HeapFlags.HEAP_NONE, size);
-			Memory memory = new Memory();
-			memory.Address = memoryObject;
-			memory.Size = size;
-			memory.HeapHandle = heapHandle;
-			memory.IsFreeOnDispose = false;
+			if (memoryObject != null)
+			{
+				Memory memory = new Memory();
+				memory.Address = memoryObject;
+				memory.Size = size;
+				memory.HeapHandle = heapHandle;
+				memory.IsFreeOnDispose = false;
 
-			return memory;
+				return memory;
+			}
+			else
+				throw new OutOfMemoryException("Allocation Failure.");
 		}
 
 		/// <summary>
