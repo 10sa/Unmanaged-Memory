@@ -42,11 +42,5 @@ namespace UnmanagedMemory
 		/// <param name="maxSize">The maximum size of the heap, in bytes. The HeapCreate function rounds dwMaximumSize up to a multiple of the system page size and then reserves a block of that size in the process's virtual address space for the heap. If allocation requests made by the HeapAlloc or HeapReAlloc functions exceed the size specified by dwInitialSize, the system commits additional pages of memory for the heap, up to the heap's maximum size.</param>
 		/// <returns>If the function succeeds, the return value is a handle to the newly created heap.</returns>
 		public static Heap CreateHeap(uint initSize, uint maxSize) => MemAPIs.CreateHeap(HeapFlags.HEAP_NONE, initSize, maxSize);
-
-		/// <summary>
-		/// Creates a private heap object that can be used by the calling process. The function reserves space in the virtual address space of the process and allocates physical storage for a specified initial portion of this block.
-		/// </summary>
-		/// <returns>If the function succeeds, the return value is a handle to the newly created heap.</returns>
-		public static Heap CreateHeap() => MemAPIs.CreateHeap(HeapFlags.HEAP_NONE, 0, 1024);
 	}
 }
