@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System;
 
-namespace UMemory
+namespace UnmanagedMemory
 {
     internal static class MemAPIs
 	{

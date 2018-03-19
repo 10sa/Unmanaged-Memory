@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UMemory
+namespace UnmanagedMemory
 {
 	[Flags]
 	public enum HeapFlags : uint

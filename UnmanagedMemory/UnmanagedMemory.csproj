@@ -44,7 +44,7 @@
     <Compile Include="HeapFlags.cs" />
     <Compile Include="Heap.cs" />
     <Compile Include="Memory.cs" />
-    <Compile Include="UMemory.cs" />
+    <Compile Include="MemAPIs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
