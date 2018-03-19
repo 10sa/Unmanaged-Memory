@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace UnmanagedMemory
 {
 	/// <summary>
-	/// Implement Unmanaged memory. This class is sealed class.
+	/// Implement Unmanaged memory.
 	/// </summary>
-	public sealed class Memory : IDisposable, ICloneable, IEnumerable
+	public class Memory : IDisposable, ICloneable, IEnumerable
 	{
 		/// <summary>
 		/// Allocated memory size.
@@ -69,7 +69,7 @@ namespace UnmanagedMemory
 		public byte[] GetBytes()
 		{
 			byte[] memoryArea = new byte[Size];
-			for (int i = 0; i < this.Size; i++)
+			for (int i = 0; i < Size; i++)
 				memoryArea[i] = this[i];
 
 			return memoryArea;
@@ -173,10 +173,7 @@ namespace UnmanagedMemory
 		/// Write Marshalable object to memory address.
 		/// </summary>
 		/// <param name="dst">The Marshalable object to write.</param>
-		public void WriteObject(object dst)
-		{
-			WriteObject(dst, false);
-		}
+		public void WriteObject(object dst) => WriteObject(dst, false);
 
 		/// <summary>
 		/// Write Marshalable object to memory address.
@@ -199,7 +196,7 @@ namespace UnmanagedMemory
 		public CastType ReadObject<CastType>()
 		{
 			if (Marshal.SizeOf(typeof(CastType)) <= Size)
-				return Marshal.PtrToStructure<CastType>(this.Address);
+				return Marshal.PtrToStructure<CastType>(Address);
 			else
 				throw new FieldAccessException();
 		}
