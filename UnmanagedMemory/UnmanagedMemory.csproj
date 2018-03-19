@@ -7,8 +7,8 @@
     <ProjectGuid>{700687E0-5A4D-40B0-BEE4-633381F662C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UMemory</RootNamespace>
-    <AssemblyName>UnmanagedMemroy</AssemblyName>
+    <RootNamespace>UnmanagedMemory</RootNamespace>
+    <AssemblyName>UnmanagedMemory</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
