@@ -40,11 +40,11 @@ namespace UnmanagedMemory
 		/// <returns>If the function succeeds, Memory.Address member not null.</returns>
 		public static Memory Allocation(uint size, Heap heapHandle)
 		{
-			IntPtr memoryObject = MemAPIs.HeapAlloc(heapHandle, HeapFlags.HEAP_NONE, size);
-			if (memoryObject != null)
+			IntPtr allocMemory = MemAPIs.HeapAlloc(heapHandle, HeapFlags.HEAP_NONE, size);
+			if (allocMemory != null)
 			{
 				Memory memory = new Memory();
-				memory.Address = memoryObject;
+				memory.Address = allocMemory;
 				memory.Size = size;
 				memory.HeapHandle = heapHandle;
 				memory.IsFreeOnDispose = false;
@@ -84,18 +84,18 @@ namespace UnmanagedMemory
 		{
 			get
 			{
-				if (offset >= Size)
-					throw new FieldAccessException();
-				else
+				if (offset <= Size)
 					return Marshal.ReadByte(Address, offset);
+				else
+					throw new FieldAccessException();
 			}
 
 			set
 			{
-				if (offset >= Size)
-					throw new FieldAccessException();
-				else
+				if (offset <= Size)
 					Marshal.WriteByte(Address, offset, value);
+				else
+					throw new FieldAccessException();
 			}
 		}
 
