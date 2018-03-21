@@ -80,12 +80,12 @@ namespace UnmanagedMemory
 		/// </summary>
 		/// <param name="offset">Memory offset.</param>
 		/// <returns>Allocated memory area value.</returns>
-		public byte this[int offset]
+		public unsafe byte this[int offset]
 		{
 			get
 			{
 				if (offset <= Size)
-					return Marshal.ReadByte(Address, offset);
+					return *((byte*)Address + offset);
 				else
 					throw new FieldAccessException();
 			}
@@ -93,7 +93,7 @@ namespace UnmanagedMemory
 			set
 			{
 				if (offset <= Size)
-					Marshal.WriteByte(Address, offset, value);
+					*((byte*)Address + offset) = value;
 				else
 					throw new FieldAccessException();
 			}
