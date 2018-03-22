@@ -68,11 +68,11 @@ memoryHeap.Destory();
    ## uint GetProcessHeaps(uint, IntPtr[])
   - Dll : Kernel32.dll
   - Symbol : GetProcessHeaps
-	- MSDN Link : https://msdn.microsoft.com/en-us/library/windows/desktop/aa366571(v=vs.85).aspx
+  - MSDN Link : https://msdn.microsoft.com/en-us/library/windows/desktop/aa366571(v=vs.85).aspx
   
    ## IntPtr HeapAlloc(IntPtr, HeapFlags, uint)
   - Dll : Kernel32.dll
-  - Symbol = HeapAlloc
+  - Symbol : HeapAlloc
   - MSDN Link : https://msdn.microsoft.com/en-us/library/windows/desktop/aa366597(v=vs.85).aspx
     
    ## IntPtr HeapFree(IntPtr, HeapFlags, IntPtr);
@@ -83,9 +83,9 @@ memoryHeap.Destory();
    ## IntPtr CopyMemory(IntPtr, IntPtr, uint)
   - Dll : Kernel32.dll
   - Symbol : CopyMemory
-	- MSDN Link : https://msdn.microsoft.com/ko-kr/library/windows/desktop/aa366535(v=vs.85).aspx
+  - MSDN Link : https://msdn.microsoft.com/ko-kr/library/windows/desktop/aa366535(v=vs.85).aspx
 
    ## IntPtr CreateHeap(HeapFlags, uint, uint)
   - Dll : Kernel32.dll
   - Symbol : CreateHeap
-	- MSDN Link : https://msdn.microsoft.com/ko-kr/library/windows/desktop/aa366599(v=vs.85).aspx
+  - MSDN Link : https://msdn.microsoft.com/ko-kr/library/windows/desktop/aa366599(v=vs.85).aspx
