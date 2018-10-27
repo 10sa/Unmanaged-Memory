@@ -1,6 +1,8 @@
 # Unmanaged Memory
 This library provides memory that can not be collected by the CLR gc and Memory heap allocation.
 
+**You should think twice when you need like this functions. Unmanaged Memory Allocation is isn't REALLY good idea in GC Environment. I recommend use this code only for study.** [If you need reason, Reference this stackoverflow question.](https://stackoverflow.com/questions/49296960/heapalloc-heapcreate-is-garbage-collectable-in-c-sharp)
+
 
 Memory areas allocated using this library are not collected by gc and must be released by the programmer. **A memory leak occurs when all references are disconnected without being released.**
 
